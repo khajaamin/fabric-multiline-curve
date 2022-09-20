@@ -5,8 +5,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/510/fabric.min.js"></script>
   </head>
   <body>
-    <h2>Passing the styles property as key</h2>
-    <p>You can see that the first character looks different now</p>
+    <p>Can add curve effect using slid input</p>
     <canvas id="canvas"></canvas>
 
     <script>
@@ -56,6 +55,7 @@
         top: 70,
         fill: 'green',
         render: function (ctx) {
+          this.setSquesedDown(this.squesedDown);
           this.callSuper('render', ctx);
         },
       });
