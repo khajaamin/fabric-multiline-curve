@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Adding the Fabric JS Library-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/510/fabric.min.js"></script>
+  </head>
+  <body>
+    <h2>Passing the styles property as key</h2>
+    <p>You can see that the first character looks different now</p>
+    <canvas id="canvas"></canvas>
+
+    <script>
+      fabric.IText.prototype.squesedDown = 3;
+      fabric.Text.prototype.setSquesedDown = function (squesedDown) {
+        this.squesedDown = squesedDown;
+        const styleList = {};
+
+        this.textLines.map((text, lineindex) => {
+          const line = {};
+
+          const perStep = this.fontSize * 0.1 * this.squesedDown;
+          if (this.squesedDown) {
+            const totalLength =
+              text.length % 2 == 0 ? text.length : this.text.length - 1;
+            let counter = text.length;
+            for (let i = 0; i <= totalLength; i++) {
+              if (i < totalLength / 2) {
+                line[i] = { fontSize: this.fontSize - perStep * i };
+                counter = i;
+              } else if (text.length % 2 != 0 && i == totalLength / 2) {
+                line[i] = { fontSize: this.fontSize - perStep * i };
+              } else {
+                line[i] = { fontSize: this.fontSize - perStep * counter };
+                counter--;
+              }
+              styleList[lineindex] = line;
+            }
+
+            this.set({ styles: styleList });
+          }
+        });
+      };
+
+      // Initiate a canvas instance
+      var canvas = new fabric.Canvas('canvas');
+      canvas.setWidth(document.body.scrollWidth);
+      canvas.setHeight(250);
+
+      // Initiate a text object
+      var text = new fabric.IText('Hello World \n Hello World', {
+        squesedDown: 1,
+        width: 300,
+        fontWeight: 'bold',
+        strokeWidth: 3,
+        left: 110,
+        top: 70,
+        fill: 'green',
+        render: function (ctx) {
+          this.callSuper('render', ctx);
+        },
+      });
+
+      // Add it to the canvas
+      canvas.add(text);
+      function changeCurve(e) {
+        canvas.getActiveObject()?.setSquesedDown(e.value);
+        canvas.requestRenderAll();
+      }
+    </script>
+
+    <input
+      type="range"
+      min="0"
+      max="1"
+      step="0.1"
+      oninput="changeCurve(this)"
+    />
+  </body>
+</html>
